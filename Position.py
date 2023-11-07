@@ -10,3 +10,5 @@ class Position:
     def __init__(self):
         self.x=r.randint(0,MAX_X_M)
         self.y=r.randint(0,MAX_Y_M)
+
+

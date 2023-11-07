@@ -32,7 +32,7 @@ class MEC:
 
         for i in range(0,len(u_lst_preference)):
             if(u_lst_preference[i]==1):
-                stack.append(user_list[i].copy())
+                stack.append(user_list[i])
 
         random.shuffle(stack) 
         
@@ -45,7 +45,9 @@ class MEC:
             if(u_lst_preference[i]==1):
                 stack.append(user_list[i]) # prima c'era .copy()
 
-        stack.sort(key=lambda x: x.data_size/ruin_prob, reverse=True) # eq 17 
+        #stack.sort(key=lambda x: x.data_size/ruin_prob, reverse=True) # eq 17 
+        stack.sort(key=lambda x: x.data_size/0.5, reverse=True) 
+        
         
         return stack
     
@@ -63,10 +65,10 @@ class MEC:
         n=10 # valre casuale, sarebbe 'n' della sommatoria
         for j in range(1,n+1):
             mu=COMPUTATION_CAPACITY_HZ
-            mu_primo=6 #Valore casuale
+            mu_primo=0.005 #Valore casuale
 
             first_component=(pow((mu*self.C_(j)),j-1) /math.factorial(j-1))
-            exponential = np.exp(-mu_primo*self.C_(j))
+            exponential = np.exp(mu_primo*self.C_(j)) #c'era un - a sx di mu_primo
             second_component=self.C_(1)/self.C_(j)
             
             value += first_component * exponential * second_component

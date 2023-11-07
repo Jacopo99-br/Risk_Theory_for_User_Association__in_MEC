@@ -5,6 +5,7 @@ import Static_2 as st
 
 
 MAX_TOTAL_DATA_SIZE_KB= 100
+MIN_TOTAL_DATA_SIZE_KB= 5
 COMPUTATION_CAPACITY_HZ= 70000
 UPLINK_TRASMISSION_CAPACITY_MW= 200 #mW
 N_USER=1000
@@ -34,7 +35,7 @@ class User:
         x=0
         for i in range(0,len(MEC_List)):
             ch_gain = st.Static.getDistance(self.pos,MEC_List[i].pos)  #channel gain basato solo sulla distanza dal MEC, da rivedere!
-            value= (UPLINK_TRASMISSION_CAPACITY_MW * ch_gain) / 10 #era diviso SYSTEM BACKGROUND NOISE, cambiato per fare prove
+            value= ((UPLINK_TRASMISSION_CAPACITY_MW * ch_gain) / 10) * MEC_List[i].buffer_size #era diviso SYSTEM BACKGROUND NOISE, cambiato per fare prove
 
             if(value>preference_value):
                 x=i
@@ -43,8 +44,8 @@ class User:
         self.preference=MEC_List[x]
         return x
     
-    def user_random_preference(self,MECs_len):
-        idx=random.randint(0,MECs_len)
+    def user_random_preference(self,MECs):
+        idx=random.randint(0,len(MECs)-1)
         return idx
 
 
