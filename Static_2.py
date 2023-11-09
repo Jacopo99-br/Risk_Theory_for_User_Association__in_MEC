@@ -1,8 +1,10 @@
 import math
 import numpy as np
 import User
+import random
+import MEC
 
-MIN_BUFFER_SIZE=50 #### minimo Kb di task richiesto da user
+MIN_BUFFER_SIZE=0 #### minimo Kb di task richiesto da user
 #Però cosi non va in loop infinito nel while dei MEC
 
 class Static:
@@ -26,11 +28,12 @@ class Static:
         Unassigned_users=Users.copy()
 
         while True:  # I due for non sono più annidati.
-            user_preference = Static.update_user_profiles_preference(MECs,Unassigned_users)
+            #user_preference = Static.update_user_profiles_preference(MECs,Unassigned_users)
                 
 
             #prende il MEC migliore e propone l'associazione: l'aggiunge alla lista di chi si propone per l'associazione con quel MEC
             for i in range(0,len(MECs)):
+                user_preference = Static.update_user_profiles_preference(MECs,Unassigned_users)
                 m=MECs[i]
                 MEC_proposers_queue=m.MEC_priority_queue(user_preference[i],Unassigned_users) #lista dei propositori ordinata secondo Jk_n
 
@@ -43,17 +46,26 @@ class Static:
 
                         X[i][Users.index(selected_user)] = 1
                         assigned_users.append(selected_user) 
+                    
                 
                 for user in assigned_users:
                     Unassigned_users.remove(user)
                 assigned_users.clear()
-                user_preference=Static.update_user_profiles_preference(MECs,Unassigned_users)
+
+                #if(Unassigned_users.sort(key=lambda x: x.data_size)[0]-m.buffer_size <= MIN_BUFFER_SIZE):
+
+
             print('Before if ruin')
             if(len(Unassigned_users)==0 or Static.get_MECs_buffer_available(MECs)<=User.MAX_TOTAL_DATA_SIZE_KB*len(MECs)):
                 print('Stop ruin')
                 break
-        
-        return X
+
+        tot_free_buffer=0
+        for m in MECs:
+            tot_free_buffer+=m.buffer_size
+        used_resources=((tot_free_buffer*100)/(len(MECs)*MEC.BUFFER_SIZE_MB))
+            
+        return X,used_resources
     
     @staticmethod
     def update_user_profiles_preference(MECs,un_users):
@@ -75,7 +87,7 @@ class Static:
         
         return user_preference
     
-    @staticmethod
+    '''@staticmethod
     def Random_Association(MECs,Users):
         X=np.zeros((len(MECs),len(Users))) #creo la matrice di partenza per l'associazione
         assigned_users=[]
@@ -109,7 +121,26 @@ class Static:
                 print('Stop Random')
                 break
         
-        return X
+        return X'''
+    
+    @staticmethod
+    def Random_Association(MECs,Users):
+        X=np.zeros((len(MECs),len(Users))) #creo la matrice di partenza per l'associazione
+        Unassigned_users=Users.copy()
+
+        for u in range(0,len(Unassigned_users)):
+            idx=random.randint(0,len(MECs)-1)
+            if(MECs[idx].buffer_size - Unassigned_users[u].data_size>=MIN_BUFFER_SIZE):
+                MECs[idx].buffer_size -= Unassigned_users[u].data_size
+
+                X[idx][u] = 1
+        
+        tot_free_buffer=0
+        for m in MECs:
+            tot_free_buffer+=m.buffer_size
+        used_resources=((tot_free_buffer*100)/(len(MECs)*MEC.BUFFER_SIZE_MB))
+
+        return X,used_resources
     
 
 
