@@ -1,15 +1,18 @@
 import random
 import Position as p
+import numpy as np
 import math
 import Static_2 as st
+from operator import itemgetter
+
 
 
 MAX_TOTAL_DATA_SIZE_KB= 100
-MIN_TOTAL_DATA_SIZE_KB= 10
+MIN_TOTAL_DATA_SIZE_KB= 50
 COMPUTATION_CAPACITY_HZ= 70000
 UPLINK_TRASMISSION_CAPACITY_MW= 200 #mW
 N_USER=1000
-SYSTEM_BACKGROUND_NOISE=-174 # dBm/Hz
+SYSTEM_BACKGROUND_NOISE= 10.0**(-17.4) #in mW    #-174 # dBm/Hz
 
 
 class User:
@@ -30,19 +33,45 @@ class User:
         self.pos.x=x
         self.pos.y=y
 
-    def user_preference_profile(self,MEC_List):
-        preference_value=0
-        x=0
+    def create_preference_profile(self,MEC_List):
+        profile=[]
         for i in range(0,len(MEC_List)):
-            ch_gain = st.Static.getDistance(self.pos,MEC_List[i].pos)  #channel gain basato solo sulla distanza dal MEC, da rivedere!
-            value= ((UPLINK_TRASMISSION_CAPACITY_MW * ch_gain) / 10) * MEC_List[i].buffer_size #era diviso SYSTEM BACKGROUND NOISE, cambiato per fare prove
+            profile.append([i,self.get_SNR(MEC_List[i])])
 
-            if(value>preference_value):
-                x=i
-                preference_value=value
+        self.preference=sorted(profile, key=itemgetter(1))
+
+    def get_SNR(self,MEC):
+        reference_dis=1000 # in m
+        dist=st.Static.getDistance(self.pos,MEC.pos)
+        antenna_gain=10
+        reciver_height=30 #m
+        ref_dist_path_loss=40*np.log10(reference_dis)-10*np.log10(antenna_gain*math.pow(reciver_height,2))
+        p_l_exponent=6
+        path_loss=ref_dist_path_loss+10*p_l_exponent*np.log10(dist/reference_dis) + np.random.rayleigh() #in db
+        ch_gain=10.0**(-path_loss/10.0)
+
+        SNR= 10*np.log10((UPLINK_TRASMISSION_CAPACITY_MW * ch_gain) / SYSTEM_BACKGROUND_NOISE)  # SNR in dB
+
+        return SNR
+
+    '''def get_preference_profile(self,MEC_List):
+        pr_list=np.zeros((len(MEC_List)))
+        for i in range(0,len(MEC_List)):
+            reference_dis=1000 # in m
+            dist=st.Static.getDistance(self.pos,MEC_List[i].pos)
+            antenna_gain=10
+            reciver_height=30 #m
+            ref_dist_path_loss=40*np.log10(reference_dis)-10*np.log10(antenna_gain*math.pow(reciver_height,2))
+            p_l_exponent=6
+            path_loss=ref_dist_path_loss+10*p_l_exponent*np.log10(dist/reference_dis) + np.random.rayleigh() #in db
+            ch_gain=10.0**(-path_loss/10.0)
+
+            SNR= 10*np.log10((UPLINK_TRASMISSION_CAPACITY_MW * ch_gain) / SYSTEM_BACKGROUND_NOISE)  # SNR in dB
+            pr_list
+
 
         self.preference=MEC_List[x]
-        return x
+        return x'''
     
     def user_random_preference(self,MECs):
         idx=random.randint(0,len(MECs)-1)

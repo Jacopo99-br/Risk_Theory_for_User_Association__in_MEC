@@ -8,7 +8,7 @@ import pickle
 SIMULATION_RUNS=50
 
 BASE_STATIONS_NUM=3
-USERS_NUMBER=200
+USERS_NUMBER=100
 
 
 AVAILABLE_SYSTEM_BANDWIDTH=20000000 #Hz  (20MHz)
@@ -33,11 +33,13 @@ for run in range(0,SIMULATION_RUNS):
             m=MEC.MEC()
             #m.print_Mec()
             mec_List.append(m)
+        random.shuffle(mec_List)
 
         for j in range(0,i):
             u=User.User(random.randint(User.MIN_TOTAL_DATA_SIZE_KB,User.MAX_TOTAL_DATA_SIZE_KB-1))
             #u.print_user()
             user_List.append(u)
+        random.shuffle(user_List)
 
 
 

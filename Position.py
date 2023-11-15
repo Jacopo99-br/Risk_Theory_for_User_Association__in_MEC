@@ -1,7 +1,7 @@
 import random as r
 
-MAX_X_M=5000
-MAX_Y_M=5000
+MAX_X_M=5000 #m
+MAX_Y_M=5000 #m
 
 class Position:
     def __init__(self,x,y):
