@@ -8,7 +8,7 @@ from operator import itemgetter
 
 
 MAX_TOTAL_DATA_SIZE_KB= 100
-MIN_TOTAL_DATA_SIZE_KB= 15
+MIN_TOTAL_DATA_SIZE_KB= 50
 COMPUTATION_CAPACITY_HZ= 70000
 UPLINK_TRASMISSION_CAPACITY_MW= 200 #mW
 N_USER=1000
@@ -39,6 +39,7 @@ class User:
             profile.append([i,self.get_SNR(MEC_List[i])])
 
         self.preference=sorted(profile, key=itemgetter(1))
+
     def get_SNR(self,MEC):
         reference_dis=1000 # in m
         dist=st.Static.getDistance(self.pos,MEC.pos)
@@ -52,30 +53,6 @@ class User:
         SNR= 10*np.log10((UPLINK_TRASMISSION_CAPACITY_MW * ch_gain) / SYSTEM_BACKGROUND_NOISE)  # SNR in dB
 
         return SNR
-
-    '''def get_preference_profile(self,MEC_List):
-        pr_list=np.zeros((len(MEC_List)))
-        for i in range(0,len(MEC_List)):
-            reference_dis=1000 # in m
-            dist=st.Static.getDistance(self.pos,MEC_List[i].pos)
-            antenna_gain=10
-            reciver_height=30 #m
-            ref_dist_path_loss=40*np.log10(reference_dis)-10*np.log10(antenna_gain*math.pow(reciver_height,2))
-            p_l_exponent=6
-            path_loss=ref_dist_path_loss+10*p_l_exponent*np.log10(dist/reference_dis) + np.random.rayleigh() #in db
-            ch_gain=10.0**(-path_loss/10.0)
-
-            SNR= 10*np.log10((UPLINK_TRASMISSION_CAPACITY_MW * ch_gain) / SYSTEM_BACKGROUND_NOISE)  # SNR in dB
-            pr_list
-
-
-        self.preference=MEC_List[x]
-        return x'''
-    
-    def user_random_preference(self,MECs):
-        idx=random.randint(0,len(MECs)-1)
-        return idx
-
 
     def print_user(self):
         s=self.ID+"  data:"+str(self.data_size)+"  pos:"+str(self.pos.x)+","+str(self.pos.y)

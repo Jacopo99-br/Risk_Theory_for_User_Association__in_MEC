@@ -9,9 +9,9 @@ class Position:
         self.x=x
         self.y=y
     def __init__(self):
-        '''self.x=r.randint(0,MAX_X_M)
-        self.y=r.randint(0,MAX_Y_M)'''
-        self.x=np.random.randint(0,MAX_X_M)
-        self.y=np.random.randint(0,MAX_Y_M)
+        self.x=r.randint(0,MAX_X_M)
+        self.y=r.randint(0,MAX_Y_M)
+        '''self.x=np.random.randint(0,MAX_X_M)
+        self.y=np.random.randint(0,MAX_Y_M)'''
 
 

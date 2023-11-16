@@ -52,10 +52,11 @@ class Static:
             Unassigned_users=list(set(Unassigned_users)-set(assigned_users))
             Unassigned_users=list(set(Unassigned_users)-set(unassignable))
 
+
             assigned_users.clear()
             unassignable.clear()
 
-            if(len(Unassigned_users)==0 or Static.get_MECs_buffer_available(MECs)<=User.MAX_TOTAL_DATA_SIZE_KB):
+            if(len(Unassigned_users)==0 or Static.get_MECs_buffer_available(MECs)<=User.MAX_TOTAL_DATA_SIZE_KB*len(MECs)):
                 print('Stop ruin')
                 break
 
@@ -80,18 +81,22 @@ class Static:
 
         return user_preference,unassignabile
     
-    @staticmethod
+    
     def Random_Association(MECs,Users):
         X=np.zeros((len(MECs),len(Users))) #creo la matrice di partenza per l'associazione
-        Unassigned_users=Users.copy()
-        random.shuffle(Unassigned_users)
+        user_random=np.zeros((len(MECs),len(Users)))
+        for u in range(0,len(Users)):
+            idx=np.random.randint(0,100)%(len(MECs)-1)
+            user_random[idx][u]=1
+        if(len(Users)==40):
+            print('fermo')
 
-        for u in range(0,len(Unassigned_users)):
-            idx=np.random.randint(0,len(MECs))
-            if((MECs[idx].buffer_size - Unassigned_users[u].data_size)>=MIN_BUFFER_SIZE):
-                MECs[idx].buffer_size -= Unassigned_users[u].data_size
-
-                X[idx][u] = 1
+        for i in range(0,len(MECs)):
+            for u in range(0,len(Users)):
+                if(user_random[i][u]==1):
+                    if((MECs[i].buffer_size - Users[u].data_size)>=MIN_BUFFER_SIZE):
+                        MECs[i].buffer_size -= Users[u].data_size
+                        X[i][u] = 1                
 
             if(Static.get_MECs_buffer_available(MECs)<=User.MAX_TOTAL_DATA_SIZE_KB*len(MECs)):
                 print('Stop random')
@@ -101,8 +106,6 @@ class Static:
         for m in MECs:
             tot_free_buffer+=m.buffer_size
         used_resources=((tot_free_buffer*100)/(len(MECs)*MEC.BUFFER_SIZE_MB))
-        if(len(Users)==200):
-            print('finale')
 
         return X,used_resources
     
