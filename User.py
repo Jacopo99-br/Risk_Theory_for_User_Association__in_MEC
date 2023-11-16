@@ -8,7 +8,7 @@ from operator import itemgetter
 
 
 MAX_TOTAL_DATA_SIZE_KB= 100
-MIN_TOTAL_DATA_SIZE_KB= 50
+MIN_TOTAL_DATA_SIZE_KB= 15
 COMPUTATION_CAPACITY_HZ= 70000
 UPLINK_TRASMISSION_CAPACITY_MW= 200 #mW
 N_USER=1000
@@ -39,7 +39,6 @@ class User:
             profile.append([i,self.get_SNR(MEC_List[i])])
 
         self.preference=sorted(profile, key=itemgetter(1))
-
     def get_SNR(self,MEC):
         reference_dis=1000 # in m
         dist=st.Static.getDistance(self.pos,MEC.pos)

@@ -5,7 +5,7 @@ import random
 import numpy as np
 import pickle
 
-SIMULATION_RUNS=50
+SIMULATION_RUNS=500
 
 BASE_STATIONS_NUM=3
 USERS_NUMBER=100
@@ -36,7 +36,7 @@ for run in range(0,SIMULATION_RUNS):
         random.shuffle(mec_List)
 
         for j in range(0,i):
-            u=User.User(random.randint(User.MIN_TOTAL_DATA_SIZE_KB,User.MAX_TOTAL_DATA_SIZE_KB-1))
+            u=User.User(random.randint(User.MIN_TOTAL_DATA_SIZE_KB,User.MAX_TOTAL_DATA_SIZE_KB))
             #u.print_user()
             user_List.append(u)
         random.shuffle(user_List)
