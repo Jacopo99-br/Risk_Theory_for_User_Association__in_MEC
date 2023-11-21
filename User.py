@@ -24,6 +24,7 @@ class User:
         self.ID="User_"+str(random.randint(0,N_USER))
         self.pos=p.Position()
         self.preference=None
+        self.SNR_list=None
 
     def printPos(self):
         s="X:"+str(self.pos.x)+"  Y:"+str(self.pos.y)
@@ -38,7 +39,9 @@ class User:
         for i in range(0,len(MEC_List)):
             profile.append([i,self.get_SNR(MEC_List[i])])
 
+        self.SNR_list=profile.copy()
         self.preference=sorted(profile, key=itemgetter(1))
+        
 
     def get_SNR(self,MEC):
         reference_dis=1000 # in m

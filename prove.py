@@ -10,7 +10,7 @@ l.pop()
 l.append([8,9])
 print(l)'''
 
-class Pio:
+'''class Pio:
     dato=None
 
     def metti_dato(self):
@@ -22,4 +22,4 @@ for i in range(0,5):
 
 map(lambda x: x.metti_dato(), l)
 
-print(l[0].dato)
+print(l[0].dato)'''

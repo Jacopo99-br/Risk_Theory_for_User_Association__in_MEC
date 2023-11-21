@@ -28,16 +28,14 @@ class Static:
         unassignable=[]
         Unassigned_users=Users.copy()
 
-        #Unassigned_users[:].create_preference_profile(MECs)
         [u.create_preference_profile(MECs) for u in Unassigned_users]
 
         while True:  # I due for non sono più annidati.
-            user_preference , unassignable = Static.update_user_profiles_preference(MECs,Unassigned_users)
+            user_preference , unassignable  = Static.update_user_profiles_preference(MECs,Unassigned_users)
 
             for i in range(0,len(MECs)): 
                 m=MECs[i]
-                m_associated=np.count_nonzero(X[i]==1)
-                MEC_proposers_queue=m.MEC_priority_queue(user_preference[i],Unassigned_users,m_associated) #lista dei propositori ordinata secondo Jk_n
+                MEC_proposers_queue=m.MEC_priority_queue(user_preference[i],Unassigned_users) #lista dei propositori ordinata secondo Jk_n
 
                 #while(not len(MEC_proposers_queue)==0 and m.buffer_size>= MIN_BUFFER_SIZE):
                 while(not len(MEC_proposers_queue)==0):
@@ -48,6 +46,8 @@ class Static:
 
                         X[i][Users.index(selected_user)] = 1
                         assigned_users.append(selected_user)
+                        m.associated_users.append(selected_user)
+                        m.get_buffer_queue()
 
             Unassigned_users=list(set(Unassigned_users)-set(assigned_users))
             Unassigned_users=list(set(Unassigned_users)-set(unassignable))
@@ -73,7 +73,8 @@ class Static:
         unassignabile=[]
         for u in un_users: 
             
-            MEC_idx=u.preference.pop()[0]# usa il pop
+            m=u.preference.pop()# usa il pop
+            MEC_idx=m[0]
             if(len(u.preference)==0):
                 unassignabile.append(u)
             user_idx=un_users.index(u)

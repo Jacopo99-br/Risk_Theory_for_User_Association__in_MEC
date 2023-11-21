@@ -10,10 +10,6 @@ SIMULATION_RUNS=500
 BASE_STATIONS_NUM=3
 USERS_NUMBER=100
 
-
-AVAILABLE_SYSTEM_BANDWIDTH=20000000 #Hz  (20MHz)
-
-
 #questo ciclo va eseguito 500 volte e calcolato la media #SIMULATION_RUNS=500
 ruin_mean=np.zeros((int(USERS_NUMBER/10),3))
 random_mean=np.zeros((int(USERS_NUMBER/10),3))
@@ -30,7 +26,7 @@ for run in range(0,SIMULATION_RUNS):
         used_resource=0 # in %
 
         for j in range(0,BASE_STATIONS_NUM):
-            m=MEC.MEC()
+            m=MEC.MEC(id_=j)
             #m.print_Mec()
             mec_List.append(m)
         random.shuffle(mec_List)
@@ -56,6 +52,7 @@ for run in range(0,SIMULATION_RUNS):
 
         for m in mec_List:
             m.buffer_size=MEC.BUFFER_SIZE_MB
+            m.associated_users.clear()
 
         
         random_result,used_resource = st.Static.Random_Association(mec_List,user_List)
@@ -67,6 +64,8 @@ for run in range(0,SIMULATION_RUNS):
 
         for m in mec_List:
             m.buffer_size=MEC.BUFFER_SIZE_MB
+            m.associated_users.clear()
+
 
     for n in range(0,len(proposed_)):
          ruin_mean[n][0]=proposed_[n][0]
