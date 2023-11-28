@@ -2,7 +2,7 @@ import random
 import Position as p
 import numpy as np
 import math
-import Static_2 as st
+import Algorithms as alg
 from operator import itemgetter
 
 
@@ -45,7 +45,7 @@ class User:
 
     def get_SNR(self,MEC):
         reference_dis=1000 # in m
-        dist=st.Static.getDistance(self.pos,MEC.pos)
+        dist=alg.Algorithms.getDistance(self.pos,MEC.pos)
         antenna_gain=10
         reciver_height=30 #m
         ref_dist_path_loss=40*np.log10(reference_dis)-10*np.log10(antenna_gain*math.pow(reciver_height,2))

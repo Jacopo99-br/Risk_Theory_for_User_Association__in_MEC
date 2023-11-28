@@ -1,6 +1,6 @@
 import User
 import MEC
-import Static_2 as st
+import Algorithms as alg
 import random
 import numpy as np
 import pickle
@@ -44,7 +44,7 @@ for run in range(0,SIMULATION_RUNS):
         
         total_users=len(user_List)
         print('total:'+str(total_users))
-        ruin_result,used_resource = st.Static.Ruin_Theory_for_User_association(mec_List,user_List)
+        ruin_result,used_resource = alg.Algorithms.Ruin_Theory_for_User_association(mec_List,user_List)
         associated_users = np.count_nonzero(ruin_result==1)
         print('ruin :'+str(associated_users))
 
@@ -53,9 +53,11 @@ for run in range(0,SIMULATION_RUNS):
         for m in mec_List:
             m.buffer_size=MEC.BUFFER_SIZE_MB
             m.associated_users.clear()
+        associated_users=0
+
 
         
-        random_result,used_resource = st.Static.Random_Association(mec_List,user_List)
+        random_result,used_resource = alg.Algorithms.Random_Association(mec_List,user_List)
         associated_users = np.count_nonzero(random_result==1)
         print('random :'+str(associated_users))
 
@@ -78,10 +80,6 @@ for run in range(0,SIMULATION_RUNS):
 
 
 
-'''
-print(proposed_)
-print("\n\n")
-print(random_)'''
 ruin_mean[:,1:3]=(ruin_mean[:,1:3]/SIMULATION_RUNS)
 random_mean[:,1:3]=(random_mean[:,1:3]/SIMULATION_RUNS)
 

@@ -2,7 +2,6 @@ import random
 import Position as p
 import numpy as np
 import math
-from numpy import random
 
 COMPUTATION_CAPACITY_GHZ=0.0006 # era 6*10^5 Hz
 CYCLES_FOR_1_MB=10*8*10**(6) # mu_zero 
@@ -10,8 +9,6 @@ INTERVAL=0.01 # in sec   : MAX accomplished deadline
 AVAILABLE_SYSTEM_BANDWIDTH=0.02 #GHz  (20MHz)
 
 BUFFER_SIZE_MB=1500  #KB
-DATA_PROCESSING_RATE=1.2 #  E' LA COMPUTATION CAPACITY???? 1.2 è un valore casuale
-REQUIRED_COMP_CAPACITY=10  #Mu0: è dato!
 N_MEC=100
 
 
@@ -46,6 +43,16 @@ class MEC:
         #esce quello con valore più basso
         
         return stack
+    
+    def update_Buffer_Surplus(self):
+        initial_surplus=BUFFER_SIZE_MB#in KB
+        n_CPU_CYCL=(COMPUTATION_CAPACITY_GHZ*(10**(9)))/len(self.associated_users)  # con Hz
+        premium_value=(n_CPU_CYCL*1)/(CYCLES_FOR_1_MB/10**(3))
+        claims=0
+        for u in self.associated_users:
+            claims+=u.data_size
+        surplus= round(initial_surplus + premium_value - claims,4)
+        self.buffer_size=surplus
 
     def get_Ruin_Probability(self):
         

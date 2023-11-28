@@ -1,6 +1,8 @@
 import numpy as np
 import random
 from operator import itemgetter
+
+print(random.getrandbits(1))
 '''for seq in range(10,1000+1,10):
     print(seq)'''
 '''

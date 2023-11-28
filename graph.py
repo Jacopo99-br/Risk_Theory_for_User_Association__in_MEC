@@ -23,6 +23,7 @@ plt.plot(x,y_ruin)
 plt.plot(x,y_random)
 
 plt.legend(legend)
+plt.savefig('GRAPHS/Users')
 
 ############### % risorse utilizzate
 
@@ -32,7 +33,7 @@ plt.style.use('ggplot')
 ax=fig.gca()
 
 ax.set_ylim([0,100])
-ax.set_ylabel('Non-Used resources (%)')
+ax.set_ylabel('Used resources (%)')
 ax.set_xlabel('Users')
 x=Ruin_[:,:1]
 y_ruin=Ruin_[:,2:3]
@@ -46,5 +47,7 @@ plt.plot(x,y_ruin)
 plt.plot(x,y_random)
 
 plt.legend(legend)
+
+plt.savefig('GRAPHS/Resources')
 
 plt.show()
